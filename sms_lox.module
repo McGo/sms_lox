@@ -1,0 +1,237 @@
+<?php
+// $Id$
+
+/**
+ * @file
+  * This is a gateway module to use with the sms
+ * framework module. It provides a sms service
+ * to Lox24 http://www.lox24.eu
+ *
+ * This module is sponsored by Red Pin Solutions GmbH
+ * and was developped by McGo <mcgo@drupalist.de>
+ */
+
+define('SMS_LOX_URL', 'www.lox24.eu/API/httpsms.php');
+
+/**
+ * Implementation of hook_menu().
+ */
+function sms_lox_menu() {
+  $items = array();
+  $items['sms_lox/receive'] = array(
+    'title' => t('SMS Lox24 Callback for receiving SMS messages'),
+    'access arguments' => array('access content'),
+    'page callback' => '_sms_lox_receive',
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_gateway_info().
+ */
+function sms_lox_gateway_info() {
+  return array(
+    'lox24' => array(
+      'name' => 'Lox24',
+      'send' => 'sms_lox_send',
+      'receive' => TRUE,
+      'configure form' => 'sms_lox_admin_form',
+    )
+  );
+}
+
+/**
+ * Form to configure the gateway
+ * @param array $config the current config
+ */
+function sms_lox_admin_form($configuration) {
+  $form = array();
+
+  $form['sms_lox_account'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Account number'),
+    '#description' => t('Please enter your Lox24 account number.'),
+    '#default_value' => $configuration['sms_lox_account'],
+  );
+  $form['sms_lox_password'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Password'),
+    '#description' => t('The current password for your Lox24 account.'),
+    '#default_value' => $configuration['sms_lox_password'],
+  );
+  $form['sms_lox_ssl'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use SSL Encyption'),
+    '#description' => t('Drupal\'s built-in HTTP client only supports SSL on PHP 4.3 compiled with OpenSSL.'),
+    '#default_value' => $configuration['sms_lox_ssl'],
+  );
+  $form['sms_lox_from'] = array(
+    '#type' => 'textfield',
+    '#title' => t('From'),
+    '#description' => t('This string will be used as the source identifier on the receivers device. <br/>Please note, that this option is not available with all the service ids provided by Lox24. For details have a look at <a href="http://www.lox24.eu/sms-typen.html">The Lox24 Website</a>'),
+    '#default_value' => $configuration['sms_lox_from'],
+  );
+  $form['sms_lox_service'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Service ID'),
+    '#description' => t('Enter the Service ID of your Lox account to set the sending method and price information.'),
+    '#default_value' => $configuration['sms_lox_service'],
+  );
+  return $form;
+}
+
+/**
+ * Validte the admin form
+ */
+function sms_lox_admin_form_validate($form, &$form_state) {
+  $config = $form_state['values'];
+  $ok = _sms_lox_api_confirm($config);
+  if (!$ok['status']) {
+    form_set_error('sms_lox_account', t('The SMS gateway does not accept these account settings.'));
+    form_set_error('sms_lox_password', t('The following error occured: @error', array('@error' => $ok['message'])));
+  }
+  else {
+    drupal_set_message(t('The SMS gateway configuration has been tested successfully.'));
+  }
+}
+
+/**
+ * Confirm the API Settings
+ */
+function _sms_lox_api_confirm($config) {
+  // Phone number as example from RFC3966, Chapter 6
+  return sms_lox_send('+1-201-555-012', 'test', array('sms_lox_test' => TRUE, 'sms_lox_config' => $config));
+}
+
+/**
+ * Send a sms
+ */
+function sms_lox_send($number, $message, $options)  {
+  // Test the form settings, if given.
+  if ($options['sms_lox_config']) {
+    $config = $options['sms_lox_config'];
+  }
+  else {
+    $gateway = sms_gateways('gateway', 'lox24');
+    $config = $gateway['configuration'];
+  }
+
+  // Cleanup the number
+  $number = $number;
+
+  // Assemble the url
+  if ($config['sms_lox_ssl'] && $config['sms_lox_ssl'] == 1) {
+    $scheme = 'https';
+  }
+  else {
+    $scheme = 'http';
+  }
+  $url = $scheme . '://'. SMS_LOX_URL;
+  $url .= '?konto='. $config['sms_lox_account'];
+  $url .= '&password='. md5($config['sms_lox_password']);
+  $url .= '&service='. $config['sms_lox_service'];
+  $url .= '&text='. rawurlencode(utf8_decode($message));
+  $url .= '&from='. rawurlencode(utf8_decode($config['sms_lox_from']));
+  $url .= '&to='. $number;
+  $url .= '&timestamp=0';
+  $url .= '&httphead=1';
+
+  if ($options['sms_lox_test']) {
+    $url .= '&action=info';
+  }
+  else {
+    $url .= '&action=send';
+  }
+
+  $res = drupal_http_request($url);
+
+  // Is the request successfull on the network layer?
+  if ($res->error) {
+    return array(
+      'status' => FALSE,
+      'message' => t('An error occured during the HTTP request: @error', array('@error' => $res->error))
+    );
+  }
+
+  // Check for Lox 24 error
+  if ($res->data) {
+    $code = (int)(drupal_substr($res->data, 0, 3));
+    $error = _sms_lox_errorcode($code);
+
+    if (is_array($error) && $error['success'] != TRUE) {
+      // There was an error and it is a documented one.
+      return array(
+        'status' => $error['success'],
+        'message' => $error['message'],
+      );
+    }
+    elseif (!is_array($error)) {
+      // The lox24 error could not be parsed form the http request.
+      return array(
+        'status' => FALSE,
+        'message' => t('An unknow error occured with the sms gateway. The connection with the provider could be established, but the error is unknown: @error', array('@error' => $res->data)),
+      );
+    }
+    else {
+      $return = array(
+        'status' => $error['success'],
+        'message' => $error['message'],
+      );
+    }
+  }
+  else {
+    return array(
+      'status' => FALSE,
+      'message' => t('The gateway is present but there is no data send back.'),
+    );
+  }
+
+  // There is no error, we can do something with the result
+  // 2Do, maybe we can do something with the Message-ID or the costs like
+  // reporting which user did what?
+  $answer = explode("\n", $res->data);
+  foreach ($answer as $value) {
+    $pos = (int)strpos($value, ': ');
+    if ($pos > 0) {
+      $key = drupal_substr($value, 0, $pos);
+      $val = drupal_substr($value, $pos+1);
+      $result[$key] = $val;
+    }
+  }
+
+  return $return;
+}
+
+/**
+ * Lox24 error codes
+ */
+function _sms_lox_errorcode($code) {
+  $codes = array(
+    100 => array('success' => TRUE, 'type' => 'success', 'message' => t('SMS successfully sent')),
+    101 => array('success' => TRUE, 'type' => 'success', 'message' => t('Succesfull request')),
+    102 => array('success' => TRUE, 'type' => 'success', 'message' => t('Action completed')),
+    200 => array('success' => FALSE, 'type' => 'data', 'message' => t('Username, password or service id is wrong')),
+    201 => array('success' => FALSE, 'type' => 'data', 'message' => t('No text')),
+    202 => array('success' => FALSE, 'type' => 'data', 'message' => t('No destination')),
+    203 => array('success' => FALSE, 'type' => 'data', 'message' => t('Text too long')),
+    204 => array('success' => FALSE, 'type' => 'data', 'message' => t('Not enough credit')),
+    205 => array('success' => FALSE, 'type' => 'data', 'message' => t('No MMS data')),
+    206 => array('success' => FALSE, 'type' => 'data', 'message' => t('MMS too big')),
+    207 => array('success' => FALSE, 'type' => 'misuse', 'message' => t('IP is not correct')),
+    208 => array('success' => FALSE, 'type' => 'misuse', 'message' => t('The destination country or carrier is not allowed')),
+    209 => array('success' => FALSE, 'type' => 'misuse', 'message' => t('Wrong XML syntax')),
+    300 => array('success' => FALSE, 'type' => 'external', 'message' => t('System error! Please get in contact with info@lox24.de!')),
+    301 => array('success' => FALSE, 'type' => 'external', 'message' => t('SMS could not be sent.')),
+    302 => array('success' => FALSE, 'type' => 'external', 'message' => t('Connection error!')),
+    400 => array('success' => FALSE, 'type' => 'external', 'message' => t('Service is in maintanance and not available.')),
+  );
+  return $codes[$code];
+}
+
+/**
+ * Function for receiving SMS messages
+ */
+function _sms_lox_receive() {
+
+}

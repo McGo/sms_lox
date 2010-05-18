@@ -1,0 +1,8 @@
+; $Id$
+name = SMS Gateway Lox24
+description = Gateway for the Lox24 SMS Service http://www.lox24.eu
+package = SMS Framework
+dependencies[] = sms
+version = "6.x-1.0"
+core = 6.x
+

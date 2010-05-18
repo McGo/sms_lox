@@ -1,0 +1,171 @@
+# $Id$
+#
+# LANGUAGE translation of Drupal (general)
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+# Generated from files:
+#  sms_lox.module: n/a
+#  sms_lox.info: n/a
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: SMS Lox24 Drupal Module\n"
+"POT-Creation-Date: 2010-05-18 20:56+0200\n"
+"PO-Revision-Date: 2010-05-18 22:07+0100\n"
+"Last-Translator: Mirko Haaser <mcgo@drupalist.de>\n"
+"Language-Team: Mirko Haaser <mcgo@drupalist.de>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: sms_lox.module:22
+msgid "SMS Lox24 Callback for receiving SMS messages"
+msgstr "Funktion zum Empfangen von SMS Lox24 SMS Nachrichten"
+
+#: sms_lox.module:53
+msgid "Account number"
+msgstr "Benutzer-ID"
+
+#: sms_lox.module:54
+msgid "Please enter your Lox24 account number."
+msgstr "Bitte geben Sie Ihre Lox24 Benutzer-ID ein."
+
+#: sms_lox.module:59
+msgid "Password"
+msgstr "Passwort"
+
+#: sms_lox.module:60
+msgid "The current password for your Lox24 account."
+msgstr "Das aktuelle Passwort für Ihr Lox24 Konto."
+
+#: sms_lox.module:65
+msgid "Use SSL Encyption"
+msgstr "SSL Verschlüsselung nutzen"
+
+#: sms_lox.module:66
+msgid "Drupal's built-in HTTP client only supports SSL on PHP 4.3 compiled with OpenSSL."
+msgstr "Die in Drupal vorhandene HTTP Funktion unterstützt SSL nur in der PHP Version 4.3 mit kompiliertem OpenSSL."
+
+#: sms_lox.module:71
+msgid "From"
+msgstr "Von"
+
+#: sms_lox.module:72
+msgid "This string will be used as the source identifier on the receivers device. <br/>Please note, that this option is not available with all the service ids provided by Lox24. For details have a look at <a href=\"http://www.lox24.eu/sms-typen.html\">The Lox24 Website</a>"
+msgstr "Diese Zeichenkette wird als Absenderkennung auf dem Empfangsgerät angezeigt. <br/>Bitte beachten Sie, dass diese Option nicht von allen Service-IDs genutzt wird, die von Lox24 angeboten werden. Schauen Sie auf <a href=\"http://www.lox24.eu/sms-typen.html\">der Lox24 Website</a> nach um weitere Informationen zu erhalten."
+
+#: sms_lox.module:77
+msgid "Service ID"
+msgstr "Service ID"
+
+#: sms_lox.module:78
+msgid "Enter the Service ID of your Lox account to set the sending method and price information."
+msgstr "Geben Sie die Service ID aus Ihrem Lox24 Konto an um die Sendemethode und die Bepreisung zu bestimmen."
+
+#: sms_lox.module:91
+msgid "The SMS gateway does not accept these account settings."
+msgstr "Die Kontoeinstellungen werden vom SMS Gateway nicht akzeptiert."
+
+#: sms_lox.module:92
+msgid "The following error occured: @error"
+msgstr "Der folgende Fehler ist aufgetreten: @error"
+
+#: sms_lox.module:94
+msgid "The SMS gateway configuration has been tested successfully."
+msgstr "Die Einstellungen für das SMS Gateway wurden erfolgreich getestet."
+
+#: sms_lox.module:147
+msgid "An error occured during the HTTP request: @error"
+msgstr "Ein Fehler ist während des HTTP Aufrufs aufgetreten: @error"
+
+#: sms_lox.module:166
+msgid "An unknow error occured with the sms gateway. The connection with the provider could be established, but the error is unknown: @error"
+msgstr "Vom SMS Gateway wurde ein unbekannter Fehler gemeldet. Die Verbindung konnte zwar hergestellt werden, der Fehler ist gemäß der Schnittstellenspezifikation aber unbekannt: @error"
+
+#: sms_lox.module:177
+msgid "The gateway is present but there is no data send back."
+msgstr "Die Verbindung mit dem Gateway wurde erfolgreich hergestellt, es sind jedoch keine Daten zurückgeliefert worden."
+
+#: sms_lox.module:202
+msgid "SMS successfully sent"
+msgstr "SMS erfolgreich versendet"
+
+#: sms_lox.module:203
+msgid "Succesfull request"
+msgstr "Erfolgreiche Abfrage"
+
+#: sms_lox.module:204
+msgid "Action completed"
+msgstr "Befehl ausgeführt"
+
+#: sms_lox.module:205
+msgid "Username, password or service id is wrong"
+msgstr "Benutzer-ID, Passwort und/oder Service-ID falsch"
+
+#: sms_lox.module:206
+msgid "No text"
+msgstr "Kein Text"
+
+#: sms_lox.module:207
+msgid "No destination"
+msgstr "Kein Ziel"
+
+#: sms_lox.module:208
+msgid "Text too long"
+msgstr "Text zu lang"
+
+#: sms_lox.module:209
+msgid "Not enough credit"
+msgstr "Nicht genügend Guthaben"
+
+#: sms_lox.module:210
+msgid "No MMS data"
+msgstr "Keine MMS-Daten"
+
+#: sms_lox.module:211
+msgid "MMS too big"
+msgstr "MMS zu groß"
+
+#: sms_lox.module:212
+msgid "IP is not correct"
+msgstr "Ungültige IP"
+
+#: sms_lox.module:213
+msgid "The destination country or carrier is not allowed"
+msgstr "Das Zielnetz/Zielland ist gesperrt"
+
+#: sms_lox.module:214
+msgid "Wrong XML syntax"
+msgstr "Ungültiger XML-Syntax"
+
+#: sms_lox.module:215
+msgid "System error! Please get in contact with info@lox24.de!"
+msgstr "Systemfehler! Wenden Sie sich an info@lox24.eu!"
+
+#: sms_lox.module:216
+msgid "SMS could not be sent."
+msgstr "SMS konnte nicht versendet werden"
+
+#: sms_lox.module:217
+msgid "Connection error!"
+msgstr "Verbindungsfehler!"
+
+#: sms_lox.module:218
+msgid "Service is in maintanance and not available."
+msgstr "Wartungsarbeiten, der Dienst ist offline."
+
+#: sms_lox.info:0
+msgid "SMS Gateway Lox24"
+msgstr "SMS Gateway Lox24"
+
+#: sms_lox.info:0
+msgid "Gateway for the Lox24 SMS Service http://www.lox24.eu"
+msgstr "Gateway des Lox24 SMS Services http://www.lox24.eu"
+
+#: sms_lox.info:0
+msgid "SMS Framework"
+msgstr "SMS Framework"
+
