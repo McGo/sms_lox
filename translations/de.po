@@ -1,7 +1,7 @@
 # $Id$
 #
-# LANGUAGE translation of Drupal (general)
-# Copyright YEAR NAME <EMAIL@ADDRESS>
+# German translation of Drupal SMS Lox24 Module
+# Copyright 2010 McGo <mcgo@drupalist.de>
 # Generated from files:
 #  sms_lox.module: n/a
 #  sms_lox.info: n/a
@@ -16,7 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-Language: German\n"
 "X-Poedit-Country: GERMANY\n"
 "X-Poedit-SourceCharset: utf-8\n"
@@ -168,4 +168,3 @@ msgstr "Gateway des Lox24 SMS Services http://www.lox24.eu"
 #: sms_lox.info:0
 msgid "SMS Framework"
 msgstr "SMS Framework"
-
