@@ -16,13 +16,13 @@ How?
    a. enter your account details that you created in Step 1
    b. enter a service id of your choise. You can get more information about this
       on the lox24.eu site.
-   c. your information will be validate when you klick save. If you receive an
+   c. your information will be validate when you click save. If you receive an
       error, it will hopefully give you further instruction on what to do.
 6. Use the SMS Framework module or any other module that uses it (like messaging)
 
 Roadmap
 -------
-- The gateway send status info back, i think i might implement that
+- The gateway send status info back, I think I might implement that
 
 Support
 -------
