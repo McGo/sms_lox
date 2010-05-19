@@ -118,7 +118,9 @@ function sms_lox_send($number, $message, $options)  {
   }
 
   // Cleanup the number
-  $number = $number;
+  $number = str_replace('+', '00', $number);
+  $number = preg_replace('(\D)', '', $number);
+
 
   // Assemble the url
   if ($config['sms_lox_ssl'] && $config['sms_lox_ssl'] == 1) {

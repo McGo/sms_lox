@@ -20,17 +20,9 @@ How?
       error, it will hopefully give you further instruction on what to do.
 6. Use the SMS Framework module or any other module that uses it (like messaging)
 
-Common mistakes
----------------
-- As far as I have seen, the gateway wants to have the target number in a format
-  like 0049123987654 that is countrycode, area code, extension without any additional
-  characters between.
-
 Roadmap
 -------
 - The gateway send status info back, i think i might implement that
-- The gateway allows one to get answer sms if you don't use your source identifier.
-  The sms framework supports thie in a basic way, so i will implement that, too.
 
 Support
 -------
